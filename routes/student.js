@@ -12,14 +12,22 @@ router.get("/students", async (req, res) => {
 //adding a student
 router.post("/students", async (req, res) => {
   const { name, rollNo } = req.body;
-  await Student.create({ name, rollNo });
-  res.send("successfully added");
+  try{
+    await Student.create({ name, rollNo });
+    res.render('student',{
+      msg:"Student created successfully"
+    });
+  }catch(err){
+    res.render('student',{
+      msg:"Student of same roll no. exists"
+    })
+  }
 });
 
 //get a single student
 router.get("/students/:rollNo", async (req, res) => {
   const { rollNo } = req.params;
-  const singleStudent=await Student.findOne({rollNo});
+  const singleStudent = await Student.findOne({ rollNo });
   res.send(singleStudent);
 });
 
@@ -35,7 +43,7 @@ router.put("/students/:rollNo", async (req, res) => {
 //delete a student
 router.delete("/students/:rollNo", async (req, res) => {
   const { rollNo } = req.params;
-  await Student.findOneAndDelete({rollNo});
+  await Student.findOneAndDelete({ rollNo });
 
   res.send("successfully deleted");
 });

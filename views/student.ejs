@@ -1,16 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Document</title>
-</head>
-<body>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color: rgb(40, 36, 36);
+            color: white;
+        }
+        .main{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          margin: 4rem;
+          gap: 2rem;
+        }
+        .form{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          /* align-items: center; */
+          gap: 0.5rem;
+        }
+         .form input,button{
+          padding: 0.25rem;
+          border-radius: 0.25rem;
+          border: 1px solid;
+          font-size: 1rem;
+        }
+        table td,th{
+            padding: 0.5rem;
+            font-size: 1.1rem;
+        }
+        table button{
+            background-color: rgb(40, 36, 36);
+            border: none;
+        }
+        i{
+            color: white;
+        }
+    </style>
+  </head>
+  <body>
+    <% if (locals.user) { %>
+     
+  <div class="main">
     <h1>Students</h1>
-    <form action="/students" method="post">
-    <input type="text" name="name">
-    <input type="number" name="rollNo">
-    <button type="submit">Add</button>
+    <% if (locals.msg) { %>
+     <p><%= msg %></p>
+    <% } %>
+    
+    <form class="form" action="/students" method="post">
+        <label for="">Name</label>
+        <input type="text" name="name" />
+        <label for="">RollNo</label>
+      <input type="number" name="rollNo" />
+      <button type="submit">Add</button>
     </form>
-</body>
+
+    <button id="btn">Get all data</button>
+
+    <div>
+      <table id="output"></table>
+    </div>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js"
+      integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const btn = document.getElementById("btn");
+      const table = document.getElementById("output");
+
+      btn.addEventListener("click", showStudents);
+      async function showStudents(){
+        const URL = "http://localhost:3000/students";
+        const response = await axios.get(URL);
+        const students = await response.data;
+
+        table.innerHTML = `
+            <tr>
+                <th>Name</th>    
+                <th>RollNo</th>    
+            </tr>
+            `;
+
+        students.forEach((student) => {
+          const output = `
+                <tr>
+                    <td>${student.name}</td>
+                    <td>${student.rollNo}</td>
+                    <td><button><i class="fa-solid fa-trash del" id=${student.rollNo}></i></button></td>
+                    <td><button><i class="fa-solid fa-pen edit" id=${student.rollNo}></i></button></td>
+                </tr>
+                `;
+          table.innerHTML += output;
+        });
+      }
+
+      table.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("del")) {
+            const id=e.target.id;
+          const URL = `http://localhost:3000/students/${id}`;
+          await axios.delete(URL);
+          e.target.parentElement.parentElement.parentElement.remove();
+          console.log("chlra h");
+        }
+
+        if(e.target.classList.contains("edit")) {
+            const id=e.target.id;
+            const URL = `http://localhost:3000/students/${id}`;
+            
+            const newName=prompt('Enter new name');  
+            await axios.put(URL ,{name:newName});
+            showStudents();
+        }
+      });
+    </script>
+      <% } %>
+  </body>
 </html>

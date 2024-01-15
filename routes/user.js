@@ -12,9 +12,16 @@ router.post("/register", async function (req, res) {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  await User.create({ email, password: hashedPassword });
-
-  res.send("created").redirect("/register");
+  try{
+      await User.create({ email, password: hashedPassword });
+      res.render('register',{
+        msg:"User created"
+      })
+  }catch(err){
+      res.render("register",{
+        msg:"User already exists"
+      })
+  }
 });
 
 router.post("/login", async (req, res) => {
@@ -22,17 +29,21 @@ router.post("/login", async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.send("user not found");
+    return res.render('login',{
+      msg:"User does not exist"
+    });
   }
 
   const isMatched = await bcrypt.compare(password, user.password);
   if (!isMatched) {
-    return res.send("password not matched");
+    return res.render("login",{
+      msg:"Password does not match"
+    });
   }
 
   const token=jwt.sign({email:user.email},secretKey);
 
-  res.cookie('token',token).redirect('/profile');
+  res.cookie('token',token).redirect('/student');
   // .send({msg: "login successful",token});
 });
 
