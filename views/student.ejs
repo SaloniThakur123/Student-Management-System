@@ -52,6 +52,17 @@
         i{
             color: white;
         }
+        a{
+          font-size: 1.5rem;
+          color: white;
+        }
+        .msg{
+          font-size: 1.25rem;
+          text-transform: uppercase;
+          background: black;
+          padding: 1rem;
+          border-radius: 0.5rem;
+        }
     </style>
   </head>
   <body>
@@ -60,7 +71,7 @@
   <div class="main">
     <h1>Students</h1>
     <% if (locals.msg) { %>
-     <p><%= msg %></p>
+     <p class="msg"><%= msg %></p>
     <% } %>
     
     <form class="form" action="/students" method="post">
@@ -133,6 +144,11 @@
         }
       });
     </script>
+    <% } else { %>
+     <div class="main">
+      <h1>Your are not authorized</h1>
+      <a href="/login">Login Page</a>
+     </div>
       <% } %>
   </body>
 </html>

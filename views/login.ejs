@@ -34,13 +34,20 @@
           border: 1px solid;
           font-size: 1rem;
         }
+        .msg{
+          font-size: 1.25rem;
+          text-transform: uppercase;
+          background: black;
+          padding: 1rem;
+          border-radius: 0.5rem;
+        }
     </style>
   </head>
   <body>
     <div class="main">
     <h1>Login</h1>
     <% if (locals.msg) { %>
-     <p><%= msg %></p>
+     <p class="msg"><%= msg %></p>
     <% } %>
     <form class="form" action="/login" method="post">
       <label for="">Email</label>

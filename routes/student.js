@@ -12,14 +12,18 @@ router.get("/students", async (req, res) => {
 //adding a student
 router.post("/students", async (req, res) => {
   const { name, rollNo } = req.body;
+  console.log(req.user);
   try{
     await Student.create({ name, rollNo });
     res.render('student',{
-      msg:"Student created successfully"
+      msg:"Student created successfully",
+            user:req.user
+
     });
   }catch(err){
     res.render('student',{
-      msg:"Student of same roll no. exists"
+      msg:"Student of same roll no. exists",
+      user:req.user
     })
   }
 });
