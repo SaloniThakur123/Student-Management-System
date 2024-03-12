@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const Student = require("../models/student");
-const { findOneAndUpdate } = require("../models/user");
 
 router.get("/students", async (req, res) => {
   const studentss = await Student.find({});
@@ -12,13 +11,11 @@ router.get("/students", async (req, res) => {
 //adding a student
 router.post("/students", async (req, res) => {
   const { name, rollNo } = req.body;
-  console.log(req.user);
   try{
     await Student.create({ name, rollNo });
     res.render('student',{
       msg:"Student created successfully",
-            user:req.user
-
+      user:req.user
     });
   }catch(err){
     res.render('student',{

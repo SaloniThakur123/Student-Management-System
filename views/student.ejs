@@ -138,7 +138,7 @@
             const id=e.target.id;
             const URL = `http://localhost:3000/students/${id}`;
             
-            const newName=prompt('Enter new name');  
+            const newName=prompt('Enter new name'); 
             await axios.put(URL ,{name:newName});
             showStudents();
         }
